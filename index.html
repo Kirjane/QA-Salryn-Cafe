@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#102f27"><meta name="description" content="Official Kirjane Labs field testing handbook for Salryn Cafe Windows and Android.">
+<title>Salryn Cafe · Field QA | Kirjane Labs</title>
+<link rel="icon" href="assets/kirjane-logo-green.jpg" type="image/jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="config.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="site-header"><div class="wrap header-row">
+<a class="brand" href="#top" aria-label="Kirjane Labs Salryn Cafe QA home">
+<span class="brand-logo"><img src="assets/kirjane-logo-green.jpg" alt="Kirjane official company logo"></span>
+<span><strong>KIRJANE <em>LABS</em></strong><small>SALRYN CAFE / FIELD QUALITY</small></span></a>
+<nav class="nav" aria-label="Site navigation"><a href="#downloads">Get the apps</a><a href="#instructions">Setup guide</a><a href="#checklist">Test checklist</a><a href="#report">Submit results</a></nav>
+<a href="#checklist" class="header-action">Start testing <span aria-hidden="true">↗</span></a>
+<button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+</div></header>
+<main id="main">
+<section id="top" class="hero">
+<div class="wrap hero-grid">
+<div class="hero-content">
+<div class="eyebrow"><span class="status-dot"></span> KIRJANE LABS / INTERNAL FIELD TESTING GUIDE <span class="eyebrow-n">01 — 04</span></div>
+<h1>Make the last<br>mile <i>count.</i></h1>
+<p class="hero-desc">A simple, guided place to install Salryn Cafe, connect your Android cashier, test real workflows, and tell the engineers exactly what worked—and what did not.</p>
+<div class="hero-actions"><a class="btn btn-light" href="#downloads">Get started <span aria-hidden="true">↗</span></a><a class="text-link" href="#how">How this works <span aria-hidden="true">↘</span></a></div>
+<div class="hero-proof"><div><strong>2</strong><span>Apps to test</span></div><div><strong>4</strong><span>Testing stages</span></div><div><strong>1</strong><span>Clear report</span></div></div>
+</div>
+<div class="hero-visual"><div class="visual-orbit orbit-1"></div><div class="visual-orbit orbit-2"></div>
+<div class="hero-mark"><span class="tiny">FIELD TEST / 2026</span><div class="mark-orbit"><span class="mark-letter">S</span></div><div class="mark-footer"><span>SALRYN<br>CAFE</span><small>WINDOWS<br>+ ANDROID</small></div></div>
+<div class="float-label label-top">TEST WITH CONFIDENCE <span>✳</span></div><div class="float-label label-bottom">THE REAL WORK / REAL DEVICES</div></div>
+</div><div class="hero-bottom wrap"><span>ENGINEERED BY KIRJANE</span><span>SCROLL TO BEGIN ↓</span></div>
+</section>
+<section class="notice-band" role="status"><div class="wrap notice-row"><span class="notice-icon">i</span><div><strong>Testing packages are not published yet.</strong> The Windows installer and Android app links are intentionally blank until the QA maintainer provides a verified, matching release. Do not install an unknown build.</div><span class="notice-pill">PREPARATION MODE</span></div></section>
+<section class="section intro" id="how"><div class="wrap"><div class="section-label"><span>01</span> YOUR MISSION <span class="rule"></span> THE BASICS</div><div class="intro-grid"><div><h2>You're not here<br>to read code.<br><em>You're here to use it.</em></h2></div><div class="intro-right"><p>Test Salryn Cafe as a real cashier or store operator would. If something is confusing, slow, missing or broken, that is useful feedback. There are no technical commands to memorize.</p><p><strong>Keep it safe:</strong> Use only the approved test accounts and sample products. No real customer records, live sales, production passwords or private information.</p><a href="#instructions" class="under-link">View the step-by-step guide ↗</a></div></div>
+<div class="four-grid"><article><span>01 / PREPARE</span><div class="stage-icon">◫</div><h3>Get ready</h3><p>Check your laptop, Android device and test network.</p></article><article><span>02 / INSTALL</span><div class="stage-icon">↓</div><h3>Set up both apps</h3><p>Install Windows Salryn Cafe and the matching Android cashier.</p></article><article><span>03 / TEST</span><div class="stage-icon">✓</div><h3>Try real workflows</h3><p>Pair, sign in, create sales and check offline recovery.</p></article><article><span>04 / REPORT</span><div class="stage-icon">↗</div><h3>Send clear results</h3><p>Save outcomes and export one report for the QA maintainer.</p></article></div>
+</div></section>
+<section class="section downloads" id="downloads"><div class="wrap"><div class="section-label light"><span>02</span> YOUR TEST KIT <span class="rule"></span> INSTALL FILES</div><div class="section-heading-row"><div><h2>One system.<br><em>Two applications.</em></h2><p>Use files supplied together for the same QA release. We will replace these placeholders only after engineering confirms the build.</p></div><div class="release-state"><span class="small-dot"></span><span id="releaseStatus">AWAITING VERIFIED QA BUILD</span></div></div>
+<div class="download-grid">
+<article class="download-card"><div class="download-top"><span class="download-num">01 / WINDOWS</span><span class="device-icon">▣</span></div><div class="download-body"><div class="app-tag">HOST COMPUTER</div><h3>Salryn Cafe<br>for Windows</h3><p>Install this on the Windows computer that runs the Cafe application and local host services.</p></div><div class="download-foot"><span id="windowsFile">Salryn-Cafe-Setup.exe · Link pending</span><a id="windowsLink" class="download-button inactive" href="#downloads" aria-disabled="true">Not available yet <span>↗</span></a></div></article>
+<article class="download-card"><div class="download-top"><span class="download-num">02 / ANDROID</span><span class="device-icon">▯</span></div><div class="download-body"><div class="app-tag">MOBILE CASHIER</div><h3>Salryn Cafe<br>for Android</h3><p>Install this on the approved test Android phone or tablet, then pair using the authorized setup instructions.</p></div><div class="download-foot"><span id="androidFile">Salryn-Cafe-QA.apk · Link pending</span><a id="androidLink" class="download-button inactive" href="#downloads" aria-disabled="true">Not available yet <span>↗</span></a></div></article>
+</div>
+<div class="release-metadata"><span>QA RELEASE: <strong id="releaseName">TO BE ANNOUNCED</strong></span><span>SOURCE BUILD: <strong id="releaseSha">PENDING</strong></span><span>SETUP/PINNING GUIDE: <strong id="pairingGuide">AWAITING RELEASE</strong></span></div>
+</div></section>
+<section class="section guide" id="instructions"><div class="wrap"><div class="section-label"><span>03</span> THE INSTRUCTIONS <span class="rule"></span> FOLLOW IN ORDER</div><div class="section-heading-row"><div><h2>Follow the steps.<br><em>We'll handle the code.</em></h2><p>Use this as your on-screen handbook. Every step explains what you do, what success looks like and when to ask for help.</p></div></div>
+<div class="guide-shell"><aside class="guide-tabs" aria-label="Setup stages"><button data-guide="prepare" class="selected"><span>01</span><div>Before you begin<small>Devices and test data</small></div></button><button data-guide="windows"><span>02</span><div>Windows setup<small>Host computer</small></div></button><button data-guide="android"><span>03</span><div>Android setup<small>Mobile cashier</small></div></button><button data-guide="pair"><span>04</span><div>Pair & verify<small>Connect the two</small></div></button><button data-guide="tests"><span>05</span><div>Run & report<small>Daily QA routine</small></div></button></aside><div class="guide-panel" id="guidePanel" aria-live="polite"></div></div>
+<div class="safety-strip"><span class="safety-star">✳</span><p><strong>Stop and report if:</strong> a charge appears twice, a sale disappears, a user gains access they should not have, the wrong store opens, your device asks you to disable TLS/security, or any real customer data appears. Do not attempt to repair the database yourself.</p></div>
+</div></section>
+<section class="section checklist" id="checklist"><div class="wrap"><div class="section-label light"><span>04</span> TEST & REPORT <span class="rule"></span> HUMAN QA</div><div class="section-heading-row"><div><h2>Every test.<br><em>One clear answer.</em></h2><p>Open each test. Follow the steps and choose Passed, Failed, Blocked or Not run. Your progress stays in this browser until you export it.</p></div><div class="progress-card"><strong id="doneCount">0 / 0</strong><span>TESTS RECORDED</span><div class="progress-track"><div id="progressFill"></div></div></div></div>
+<div class="test-controls"><div class="filter-pills" id="categoryFilters"></div><label class="search-field"><span>⌕</span><input id="testSearch" placeholder="Find a test..." aria-label="Search test cases"></label></div>
+<div id="caseGroups"></div>
+<div class="report-panel" id="report"><div class="report-head"><div class="small-overline">HANDOFF / TEST RESULTS</div><h3>Send what<br>you observed.</h3><p>This page does not upload or transmit test data. Export the report and send it to your designated QA maintainer using your team's approved communication channel.</p></div>
+<div class="report-form"><label>Tester name or initials<input id="qaTester" placeholder="e.g. M. Santos" autocomplete="name"></label><label>Test date<input id="qaDate" type="date"></label><label>Windows device / OS<input id="qaWindows" placeholder="e.g. Laptop 02 · Windows 11"></label><label>Android device / OS<input id="qaAndroid" placeholder="e.g. Samsung tablet · Android 14"></label><label>QA build identifier<input id="qaBuild" placeholder="Release / matching source SHA"></label><label>Other observations<textarea id="qaNotes" rows="3" placeholder="What felt confusing? Any problems not covered by the checklist?"></textarea></label>
+<div class="report-actions"><button id="exportJson" class="btn btn-green">Export complete QA report ↓</button><button id="exportCsv" class="btn btn-outline">Export spreadsheet CSV ↓</button><button id="printReport" class="btn btn-outline">Print summary ↗</button></div><div class="report-note">Your entries are stored only on this device/browser. They are not automatically submitted. Keep the exported file safe and do not include credentials or customer information.</div>
+</div></div>
+</div></section>
+</main>
+<footer><div class="wrap footer-main"><div><a class="footer-brand" href="#top"><img src="assets/kirjane-logo-green.jpg" alt="Kirjane mark"><span><strong>KIRJANE LABS</strong><small>SALRYN CAFE / QUALITY ASSURANCE</small></span></a><p>Practical testing, clear evidence, dependable software.</p></div><div><span class="footer-label">ON THIS PAGE</span><a href="#downloads">Test downloads</a><a href="#instructions">Setup instructions</a><a href="#checklist">QA checklist</a><a href="#report">Export a report</a></div><div><span class="footer-label">IMPORTANT</span><p>QA environment only. No live clients or production records. Follow instructions from your QA maintainer if a test cannot continue safely.</p></div></div><div class="wrap footer-bottom"><span>© 2026 KIRJANE LABS · SALRYN CAFE</span><span>HUMAN-FIRST QUALITY ASSURANCE / NO LOGIN REQUIRED</span></div></footer>
+</body></html>
