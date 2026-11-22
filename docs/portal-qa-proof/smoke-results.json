@@ -1,0 +1,181 @@
+{
+  "ranAtUtc": "2026-11-22T13:12:14.511Z",
+  "totalAssertions": 34,
+  "passed": 34,
+  "failed": 0,
+  "consoleErrors": [],
+  "pageErrors": [],
+  "totalNetworkRequests": 142,
+  "results": [
+    {
+      "label": "Installer & APK download links remain disabled in Preparation Mode",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "All 31 existing QA test cases rendered",
+      "pass": true,
+      "detail": "count=31"
+    },
+    {
+      "label": "Visual Review renders all 80 entries (74 captures + 6 missing/human)",
+      "pass": true,
+      "detail": "count=80"
+    },
+    {
+      "label": "All 74 screenshot card images resolve with zero broken thumbnails",
+      "pass": true,
+      "detail": "loaded=74, broken=0"
+    },
+    {
+      "label": "Visual Review search narrows cards accurately",
+      "pass": true,
+      "detail": "matches=11"
+    },
+    {
+      "label": "Detail viewer opens WIN-CASH-04 with correct title",
+      "pass": true,
+      "detail": "Product Variant & Modifier Customization Dialog"
+    },
+    {
+      "label": "Numbered hotspot overlays rendered on WIN-CASH-04",
+      "pass": true,
+      "detail": "pins=4"
+    },
+    {
+      "label": "Side-by-side Expected Specification Checklist toggles cleanly",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "WHY IT EXISTS tab renders grounded content",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "WHAT SHOULD BE THERE tab renders expected contract",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Per-screen visual review saves locally",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Keyboard ArrowRight advances cleanly to next screen",
+      "pass": true,
+      "detail": "now=WIN-CASH-05"
+    },
+    {
+      "label": "Jumping to Sandbox closes detail viewer",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Sandbox context bar shows direct back-link to originating screenshot WIN-CASH-05",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Sandbox Cashier completes synthetic Cash checkout",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Sandbox Receipt shows explicit PREVIEW ONLY modal",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Sandbox Kitchen advances ticket to Preparing",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Sandbox Error preset truthfully reproduces reported Area G /api/settings/store 404",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Sandbox Central Owner approves pending Patio Barista Kiosk",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Sandbox Android replica queues offline order and syncs to 0 pending on reconnect",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Reset Demo Data restores clean seed state",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Case verdict persists across page reload",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Visual screen review persists across page reload",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Cleared localStorage resets progress to 0 / 31",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Validated JSON import rejects wrong reportType safely",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Validated JSON import restores both 31-case and visual screen reviews cleanly",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "label": "Zero horizontal document overflow at 360px width",
+      "pass": true,
+      "detail": "delta=0px"
+    },
+    {
+      "label": "Zero horizontal document overflow at 390px width",
+      "pass": true,
+      "detail": "delta=0px"
+    },
+    {
+      "label": "Zero horizontal document overflow at 768px width",
+      "pass": true,
+      "detail": "delta=0px"
+    },
+    {
+      "label": "Zero horizontal document overflow at 1024px width",
+      "pass": true,
+      "detail": "delta=0px"
+    },
+    {
+      "label": "Zero horizontal document overflow at 1440px width",
+      "pass": true,
+      "detail": "delta=0px"
+    },
+    {
+      "label": "Zero production API requests observed in browser network log",
+      "pass": true,
+      "detail": "prodCalls=0"
+    },
+    {
+      "label": "Zero unexpected external network requests",
+      "pass": true,
+      "detail": "unexpected=0"
+    },
+    {
+      "label": "Zero browser console errors and zero uncaught page errors",
+      "pass": true,
+      "detail": "console=0, page=0"
+    }
+  ]
+}
