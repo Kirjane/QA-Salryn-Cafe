@@ -1,0 +1,29 @@
+{
+  "name": "kirjane-salryn-cafe-qa-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Offline desktop QA screenshot library and synthetic Cafe frontend simulation. Not an operational POS.",
+  "main": "main.cjs",
+  "scripts": {
+    "stage": "node scripts/stage-static.mjs",
+    "build:win": "npm run stage && electron-builder --win portable --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "34.5.8",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "ph.kirjanelabs.salryncafe.qa",
+    "productName": "Kirjane Salryn Cafe QA",
+    "copyright": "Copyright 2026 Kirjane Labs",
+    "directories": { "output": "release" },
+    "files": ["main.cjs", "app/**/*", "package.json"],
+    "asar": true,
+    "compression": "maximum",
+    "win": {
+      "target": [{ "target": "portable", "arch": ["x64"] }],
+      "artifactName": "Kirjane-SalrynCafe-QA-0.1.0-win-x64.exe"
+    },
+    "publish": null
+  }
+}
