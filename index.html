@@ -9,11 +9,14 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="portal-modules.css">
+<link rel="stylesheet" href="qa-app.css">
+<link rel="manifest" href="manifest.webmanifest">
 <script src="config.js" defer></script>
 <script src="data/screens-data.js" defer></script>
 <script src="app.js" defer></script>
 <script src="visual-review.js" defer></script>
 <script src="sandbox.js" defer></script>
+<script src="install-qa.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to main content</a>
@@ -32,6 +35,12 @@
 <a href="#visual-review" class="header-action">Inspect screens <span aria-hidden="true">↗</span></a>
 <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
 </div></header>
+<div id="qaAppInstallBar" class="qa-app-install-bar" role="region" aria-label="Installable QA app">
+  <strong>INSTALLABLE QA APP · OFFLINE REVIEW</strong>
+  <small>Actual screenshots and the synthetic frontend simulator. Not a live cashier, accounting ledger, or production system.</small>
+  <button type="button" id="installQaApp" class="qa-install-button" disabled>Install QA app</button>
+  <span id="qaAppInstallState" class="qa-app-install-state" role="status" aria-live="polite">Checking offline support…</span>
+</div>
 <main id="main">
 <section id="top" class="hero">
 <div class="wrap hero-grid">
