@@ -1,0 +1,5 @@
+.qa-app-install-bar{background:#e8f0e9;color:#193d31;border-bottom:1px solid #b2cbb9;padding:12px max(20px,calc((100vw - 1220px)/2));display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-family:inherit}
+.qa-app-install-bar strong{font-size:13px;font-weight:800}.qa-app-install-bar small{font-size:12px;line-height:1.4;max-width:550px}
+.qa-install-button{border:0;border-radius:5px;background:#143d31;color:#fff;font-weight:700;cursor:pointer;padding:11px 14px;font-size:12px}
+.qa-install-button:disabled{opacity:.55;cursor:not-allowed}.qa-app-install-state{font-size:12px;line-height:1.4;color:#2f6250}
+@media(max-width:640px){.qa-app-install-bar{padding:12px 18px}.qa-install-button{width:100%}.qa-app-install-state{width:100%}}
