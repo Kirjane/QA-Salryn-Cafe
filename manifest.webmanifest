@@ -1,0 +1,16 @@
+{
+  "id":"./index.html",
+  "name":"Kirjane Labs — Salryn Cafe QA",
+  "short_name":"Salryn QA",
+  "description":"Offline screenshot inspection and simulated Cafe frontend — NOT a live POS",
+  "start_url":"./index.html#visual-review",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#f5f4ee",
+  "theme_color":"#102f27",
+  "categories":["productivity","education"],
+  "icons":[
+    {"src":"./assets/qa-app-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"},
+    {"src":"./assets/kirjane-logo-green.jpg","sizes":"any","type":"image/jpeg","purpose":"any"}
+  ]
+}
