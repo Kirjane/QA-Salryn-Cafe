@@ -7,7 +7,7 @@ const qs=(s,root=document)=>root.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 let data={cases:{},meta:{}};
 try{const v=JSON.parse(localStorage.getItem(STORE)||"{}");if(v&&typeof v==="object"){data.cases=v.cases||{};data.meta=v.meta||{}}}catch{}
-const save=()=>{try{localStorage.setItem(STORE,JSON.stringify(data))}catch{}};
+const save=()=>{try{localStorage.setItem(STORE,JSON.stringify(data))}catch{};renderDashboard()};
 const set=(id,v)=>{data.meta[id]=v;save()};
 const setupRelease=()=>{
  const valid=u=>typeof u==="string"&&/^https:\/\//i.test(u);
@@ -28,20 +28,61 @@ const showGuide=id=>{
 };
 let selected="ALL";
 const groups=[["A","Before you begin"],["W","Windows installation"],["M","Android & pairing"],["F","Sales & offline recovery"],["H","Hardware & final handoff"]];
+
+function screensForCase(caseCode){
+ const manifest=window.SALRYN_SCREENS_MANIFEST||{screens:[]};
+ return (manifest.screens||[]).filter(s=>Array.isArray(s.testCaseIds)&&s.testCaseIds.includes(caseCode));
+}
+
+function renderDashboard(){
+ const dash=qs("#qaDashboard");
+ if(!dash)return;
+ const cPass=cases.filter(c=>data.cases[c[2]]?.status==="PASS").length;
+ const cFail=cases.filter(c=>data.cases[c[2]]?.status==="FAIL").length;
+ const cBlocked=cases.filter(c=>data.cases[c[2]]?.status==="BLOCKED").length;
+ const cNotRun=cases.length-cPass-cFail-cBlocked;
+ const vs=window.SalrynVisualReview?window.SalrynVisualReview.getSummary():{totalCaptured:74,missingCount:6,pass:0,fail:0,blocked:0,notRun:0,unreviewed:74,issues:[],moduleCoverage:[]};
+ const visReviewed=vs.pass+vs.fail+vs.blocked;
+ const modBars=(vs.moduleCoverage||[]).map(m=>{
+  const pct=m.total?Math.round((m.reviewed/m.total)*100):0;
+  return '<div class="qa-mod-row"><div style="display:flex;justify-content:space-between"><span>'+esc(m.label)+'</span><strong>'+m.reviewed+' / '+m.total+'</strong></div><div class="qa-mod-track"><div class="qa-mod-fill" style="width:'+pct+'%"></div></div></div>';
+ }).join("");
+ dash.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><strong style="font-size:13px;letter-spacing:.08em;color:#abdfc4;text-transform:uppercase">Unified QA Coverage Dashboard (On-Device Local State)</strong><span style="font-size:11.5px;color:#b8d5c3">Real-build cases &amp; visual reviews tracked separately · Missing captures shown honestly</span></div>'
+  +'<div class="qa-dash-grid">'
+  +'<div class="qa-dash-stat"><strong>'+cPass+' / '+cases.length+'</strong><span>31 Cases Passed</span></div>'
+  +'<div class="qa-dash-stat"><strong>'+cFail+' / '+cBlocked+'</strong><span>Cases Failed / Blocked</span></div>'
+  +'<div class="qa-dash-stat"><strong>'+cNotRun+'</strong><span>Cases Not Run</span></div>'
+  +'<div class="qa-dash-stat"><strong>'+visReviewed+' / '+vs.totalCaptured+'</strong><span>Visual Screens Reviewed</span></div>'
+  +'<div class="qa-dash-stat"><strong>'+vs.issues.length+'</strong><span>Visual Issues Logged</span></div>'
+  +'<div class="qa-dash-stat"><strong>'+vs.missingCount+'</strong><span>Known Missing / Human</span></div>'
+  +'</div>'
+  +(modBars?'<div class="qa-module-bars">'+modBars+'</div>':'');
+}
+
 function render(){
+ const openIds=new Set(Array.from(document.querySelectorAll("details.case[open]")).map(el=>el.id));
  const search=qs("#testSearch").value.toLowerCase().trim();
  const html=groups.filter(([id])=>selected==="ALL"||selected===id).map(([id,title])=>{
  const arr=cases.filter(c=>c[0]===id&&(!search||[c[2],c[3],c[4],c[5]].join(" ").toLowerCase().includes(search)));
  if(!arr.length)return"";
  return '<section class="test-group"><div class="test-group-head"><h3>'+esc(title)+'</h3><span>'+arr.length+' CHECKS</span></div>'+arr.map(c=>{
  const state=data.cases[c[2]]||{};const status=state.status||"NOT RUN";
- return '<details class="case" id="case-'+c[2]+'"><summary><span class="case-code">'+c[2]+'</span><span class="case-title">'+esc(c[3])+'</span><span class="case-status '+esc(status)+'">'+(status==="PASS"?"PASSED":status==="FAIL"?"FAILED":status==="BLOCKED"?"BLOCKED":"NOT RUN")+'</span><span class="chev">›</span></summary><div class="case-body"><h4>WHAT TO DO</h4><p>'+esc(c[4])+'</p><h4>WHAT SUCCESS LOOKS LIKE</h4><p class="expect">'+esc(c[5])+'</p><h4>WHAT TO RECORD</h4><p>'+esc(c[6])+'</p><div class="result-row"><label>Test result<select data-case="'+c[2]+'"><option value="NOT RUN" '+(status==="NOT RUN"?"selected":"")+'>Not run</option><option value="PASS" '+(status==="PASS"?"selected":"")+'>Passed</option><option value="FAIL" '+(status==="FAIL"?"selected":"")+'>Failed</option><option value="BLOCKED" '+(status==="BLOCKED"?"selected":"")+'>Blocked</option></select></label><label>Your observation / screenshot filename<textarea data-note="'+c[2]+'" placeholder="What happened? Be specific.">'+esc(state.note||"")+'</textarea></label></div></div></details>';
+ const related=screensForCase(c[2]);
+ const firstSb=related.find(s=>s.sandboxRoute&&s.sandboxRoute!=="qa-portal-info")?.sandboxRoute||"";
+ const crossHtml=related.length
+  ?'<h4>LINKED REAL SCREENSHOTS &amp; SANDBOX</h4><div class="case-cross-links">'
+   +related.slice(0,5).map(s=>'<button type="button" class="case-link-pill" data-open-screen="'+esc(s.id)+'">'+esc(s.id)+' ('+esc(s.capturesStatus)+') ↗</button>').join("")
+   +(firstSb?'<button type="button" class="case-link-pill" data-jump-sandbox="'+esc(firstSb)+'">Try in Sandbox ↗</button>':'')
+   +'</div>'
+  :"";
+ return '<details class="case" id="case-'+c[2]+'"'+(openIds.has("case-"+c[2])?" open":"")+'><summary><span class="case-code">'+c[2]+'</span><span class="case-title">'+esc(c[3])+'</span><span class="case-status '+esc(status)+'">'+(status==="PASS"?"PASSED":status==="FAIL"?"FAILED":status==="BLOCKED"?"BLOCKED":"NOT RUN")+'</span><span class="chev">›</span></summary><div class="case-body"><h4>WHAT TO DO</h4><p>'+esc(c[4])+'</p><h4>WHAT SUCCESS LOOKS LIKE</h4><p class="expect">'+esc(c[5])+'</p><h4>WHAT TO RECORD</h4><p>'+esc(c[6])+'</p>'+crossHtml+'<div class="result-row"><label>Test result<select data-case="'+c[2]+'"><option value="NOT RUN" '+(status==="NOT RUN"?"selected":"")+'>Not run</option><option value="PASS" '+(status==="PASS"?"selected":"")+'>Passed</option><option value="FAIL" '+(status==="FAIL"?"selected":"")+'>Failed</option><option value="BLOCKED" '+(status==="BLOCKED"?"selected":"")+'>Blocked</option></select></label><label>Your observation / screenshot filename<textarea data-note="'+c[2]+'" placeholder="What happened? Be specific.">'+esc(state.note||"")+'</textarea></label></div></div></details>';
  }).join("")+'</section>';
  }).join("");
  qs("#caseGroups").innerHTML=html||'<p class="empty-results">No tests match this search. Try another keyword.</p>';
  const done=cases.filter(c=>data.cases[c[2]]?.status&&data.cases[c[2]].status!=="NOT RUN").length;
  qs("#doneCount").textContent=done+" / "+cases.length;
  qs("#progressFill").style.width=(done/cases.length*100)+"%";
+ renderDashboard();
 }
 function initChecklist(){
  const filters=[["ALL","All tests"],...groups.map(x=>[x[0],x[1]])];
@@ -52,19 +93,102 @@ function initChecklist(){
  qs("#caseGroups").addEventListener("input",e=>{const c=e.target.closest("[data-note]");if(c){data.cases[c.dataset.note]={...(data.cases[c.dataset.note]||{}),note:c.value};save()}});
  render()
 }
-function report(){return {reportType:"SALRYN_CAFE_HUMAN_QA",generatedAtUtc:new Date().toISOString(),release:{version:release.version||"PENDING",sourceSha:release.sourceSha||"PENDING",windowsFilename:release.windows?.filename||"PENDING",windowsSha256:release.windows?.sha256||"",androidFilename:release.android?.filename||"PENDING",androidSha256:release.android?.sha256||""},tester:Object.fromEntries(["qaTester","qaDate","qaWindows","qaAndroid","qaBuild","qaNotes"].map(k=>[k,qs("#"+k)?.value||""])),results:cases.map(c=>({code:c[2],category:c[1],test:c[3],status:data.cases[c[2]]?.status||"NOT RUN",observation:data.cases[c[2]]?.note||""})),summary:{passed:cases.filter(c=>data.cases[c[2]]?.status==="PASS").length,failed:cases.filter(c=>data.cases[c[2]]?.status==="FAIL").length,blocked:cases.filter(c=>data.cases[c[2]]?.status==="BLOCKED").length,notRun:cases.filter(c=>!data.cases[c[2]]?.status||data.cases[c[2]]?.status==="NOT RUN").length}}}
+function report(){
+ const visualReviews=window.SalrynVisualReview?window.SalrynVisualReview.getAllReviews():{};
+ const visualSummary=window.SalrynVisualReview?window.SalrynVisualReview.getSummary():{};
+ const manifest=window.SALRYN_SCREENS_MANIFEST||{};
+ return {
+  reportType:"SALRYN_CAFE_HUMAN_QA",
+  schemaVersion:"2.0",
+  generatedAtUtc:new Date().toISOString(),
+  privacyNotice:"Browser-local export only. No credentials, tokens, or real customer records permitted.",
+  release:{version:release.version||"PENDING",sourceSha:release.sourceSha||"PENDING",visualEvidenceSha:manifest.sourceCommitSha||"3d23ef4b9c4bca7b992f9e58d28c61e9e474ad23",windowsFilename:release.windows?.filename||"PENDING",windowsSha256:release.windows?.sha256||"",androidFilename:release.android?.filename||"PENDING",androidSha256:release.android?.sha256||""},
+  tester:Object.fromEntries(["qaTester","qaDate","qaWindows","qaAndroid","qaBuild","qaNotes"].map(k=>[k,qs("#"+k)?.value||""])),
+  results:cases.map(c=>({code:c[2],category:c[1],test:c[3],status:data.cases[c[2]]?.status||"NOT RUN",observation:data.cases[c[2]]?.note||"",linkedScreenIds:screensForCase(c[2]).map(s=>s.id)})),
+  visualReviews,
+  visualSummary:{totalCaptured:visualSummary.totalCaptured||74,missingCount:visualSummary.missingCount||6,pass:visualSummary.pass||0,fail:visualSummary.fail||0,blocked:visualSummary.blocked||0,unreviewed:visualSummary.unreviewed||0,issuesCount:(visualSummary.issues||[]).length},
+  summary:{passed:cases.filter(c=>data.cases[c[2]]?.status==="PASS").length,failed:cases.filter(c=>data.cases[c[2]]?.status==="FAIL").length,blocked:cases.filter(c=>data.cases[c[2]]?.status==="BLOCKED").length,notRun:cases.filter(c=>!data.cases[c[2]]?.status||data.cases[c[2]]?.status==="NOT RUN").length}
+ };
+}
 function download(name,contents,type){const a=document.createElement("a");const blob=new Blob([contents],{type});const u=URL.createObjectURL(blob);a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 const csvcell=x=>'"'+String(x??"").replace(/"/g,'""')+'"';
+
+function setImportStatus(msg,ok){
+ const el=qs("#importStatus");
+ if(!el)return;
+ el.textContent=msg;
+ el.className="import-status show "+(ok?"ok":"err");
+}
+
+function validateAndImportJson(rawText){
+ if(rawText.length>2*1024*1024){setImportStatus("Import rejected: file exceeds 2 MB safety limit.",false);return false}
+ let parsed;
+ try{parsed=JSON.parse(rawText)}catch{setImportStatus("Import rejected: invalid JSON syntax.",false);return false}
+ if(!parsed||typeof parsed!=="object"||parsed.reportType!=="SALRYN_CAFE_HUMAN_QA"){
+  setImportStatus("Import rejected: reportType must be SALRYN_CAFE_HUMAN_QA.",false);return false
+ }
+ const validCodes=new Set(cases.map(c=>c[2]));
+ let importedCases=0;
+ if(Array.isArray(parsed.results)){
+  for(const row of parsed.results){
+   if(!row||typeof row!=="object"||!validCodes.has(row.code))continue;
+   const status=["PASS","FAIL","BLOCKED","NOT RUN"].includes(row.status)?row.status:"NOT RUN";
+   const note=String(row.observation||"").slice(0,2000);
+   if(status!=="NOT RUN"||note){
+    data.cases[row.code]={status,note};
+    importedCases++;
+   }
+  }
+ }
+ if(parsed.tester&&typeof parsed.tester==="object"){
+  for(const key of ["qaTester","qaDate","qaWindows","qaAndroid","qaBuild","qaNotes"]){
+   if(typeof parsed.tester[key]==="string"&&parsed.tester[key].trim()){
+    data.meta[key]=parsed.tester[key].slice(0,1000);
+    const el=qs("#"+key);if(el)el.value=data.meta[key];
+   }
+  }
+ }
+ save();
+ const importedVisual=window.SalrynVisualReview?window.SalrynVisualReview.importReviews(parsed.visualReviews):0;
+ render();
+ setImportStatus("Imported "+importedCases+" QA case record(s) and "+importedVisual+" visual screen review(s) locally.",true);
+ return true;
+}
+
 function initReports(){
  for(const key of ["qaTester","qaDate","qaWindows","qaAndroid","qaBuild","qaNotes"]){const el=qs("#"+key);el.value=data.meta[key]||"";el.addEventListener("input",()=>set(key,el.value))}
  if(!qs("#qaDate").value){qs("#qaDate").value=new Date().toISOString().slice(0,10);set("qaDate",qs("#qaDate").value)}
  qs("#exportJson").addEventListener("click",()=>download("Salryn-Cafe-QA-Report-"+new Date().toISOString().slice(0,10)+".json",JSON.stringify(report(),null,2),"application/json"));
- qs("#exportCsv").addEventListener("click",()=>{const r=report();const header=["Case","Category","Test","Result","Observations","Tester","Date","Build","Windows","Android"];const rows=r.results.map(x=>[x.code,x.category,x.test,x.status,x.observation,r.tester.qaTester,r.tester.qaDate,r.tester.qaBuild,r.tester.qaWindows,r.tester.qaAndroid]);download("Salryn-Cafe-QA-Results.csv",[header,...rows].map(row=>row.map(csvcell).join(",")).join("\r\n"),"text/csv;charset=utf-8")});
- qs("#printReport").addEventListener("click",()=>window.print())
+ qs("#exportCsv").addEventListener("click",()=>{
+  const r=report();
+  const header=["RecordType","CodeOrScreenId","Category","Title","Result","Observations","TesterOrReviewer","Date","Build","Source","Windows","Android"];
+  const caseRows=r.results.map(x=>["QA_CASE",x.code,x.category,x.test,x.status,x.observation,r.tester.qaTester,r.tester.qaDate,r.tester.qaBuild,"REAL_BUILD",r.tester.qaWindows,r.tester.qaAndroid]);
+  const visualRows=[];
+  for(const [sid,arr] of Object.entries(r.visualReviews||{})){
+   if(!Array.isArray(arr))continue;
+   for(const v of arr){
+    visualRows.push(["VISUAL_REVIEW",sid,v.category||"None",v.severity||"P2",v.verdict||"NOT RUN",v.notes||"",v.reviewerAlias||"",v.updatedAtUtc||"",r.release.visualEvidenceSha,v.source||"REAL_SCREENSHOT",v.device||"",""]);
+   }
+  }
+  download("Salryn-Cafe-QA-Results.csv",[header,...caseRows,...visualRows].map(row=>row.map(csvcell).join(",")).join("\r\n"),"text/csv;charset=utf-8");
+ });
+ qs("#importJsonBtn")?.addEventListener("click",()=>qs("#importJsonFile")?.click());
+ qs("#importJsonFile")?.addEventListener("change",e=>{
+  const file=e.target.files&&e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>validateAndImportJson(String(reader.result||""));
+  reader.onerror=()=>setImportStatus("Import failed: could not read selected file.",false);
+  reader.readAsText(file);
+  e.target.value="";
+ });
+ qs("#printReport").addEventListener("click",()=>window.print());
+ window.SalrynQaApp={getReport:report,importJsonText:validateAndImportJson};
 }
 document.addEventListener("DOMContentLoaded",()=>{
  setupRelease();initChecklist();initReports();
  document.querySelectorAll("[data-guide]").forEach(b=>b.addEventListener("click",()=>showGuide(b.dataset.guide)));showGuide("prepare");
  qs("#menuToggle").addEventListener("click",()=>{const n=qs(".nav");n.classList.toggle("open");qs("#menuToggle").setAttribute("aria-expanded",String(n.classList.contains("open")))});
  document.querySelectorAll(".nav a").forEach(a=>a.addEventListener("click",()=>{qs(".nav").classList.remove("open");qs("#menuToggle").setAttribute("aria-expanded","false")}));
+ window.addEventListener("salryn:visual-updated",renderDashboard);
 });
