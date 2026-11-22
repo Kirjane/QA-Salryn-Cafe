@@ -1,0 +1,57 @@
+name: Package offline Kirjane QA desktop app
+on:
+  pull_request:
+    paths:
+      - 'packaging/**'
+      - 'assets/**'
+      - 'data/**'
+      - 'app.js'
+      - 'visual-review.js'
+      - 'sandbox.js'
+      - 'index.html'
+      - 'styles.css'
+      - 'portal-modules.css'
+      - 'qa-app.css'
+      - 'manifest.webmanifest'
+      - 'offline-worker.js'
+      - 'install-qa.js'
+      - '.github/workflows/qa-app-package.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package-windows-qa:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify visual QA manifest and no-backend guardrails
+        run: node scripts/verify-portal.mjs
+      - name: Install Electron packaging tools
+        working-directory: packaging
+        run: npm install --no-audit --no-fund
+      - name: Build unsigned portable QA desktop executable
+        working-directory: packaging
+        run: npm run build:win
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - name: Record SHA-256 and source commit
+        shell: pwsh
+        run: |
+          $app = Get-Item 'packaging/release/Kirjane-SalrynCafe-QA-0.1.0-win-x64.exe'
+          $hash = (Get-FileHash $app.FullName -Algorithm SHA256).Hash
+          "APP: $($app.Name)" | Out-File 'packaging/release/manifest.txt'
+          "SHA256: $hash" | Out-File 'packaging/release/manifest.txt' -Append
+          "SOURCE: $env:GITHUB_SHA" | Out-File 'packaging/release/manifest.txt' -Append
+          "PURPOSE: OFFLINE VISUAL QA & SIMULATION ONLY, NOT OPERATIONAL POS" | Out-File 'packaging/release/manifest.txt' -Append
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Kirjane-SalrynCafe-QA-Windows-Portable
+          path: |
+            packaging/release/Kirjane-SalrynCafe-QA-0.1.0-win-x64.exe
+            packaging/release/manifest.txt
+          retention-days: 7
+          if-no-files-found: error
